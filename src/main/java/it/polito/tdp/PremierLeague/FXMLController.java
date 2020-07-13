@@ -8,6 +8,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import it.polito.tdp.PremierLeague.model.Arco;
 import it.polito.tdp.PremierLeague.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,7 +41,7 @@ public class FXMLController {
     private TextField txtMinuti; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbMese"
-    private ComboBox<?> cmbMese; // Value injected by FXMLLoader
+    private ComboBox<Integer> cmbMese; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbM1"
     private ComboBox<?> cmbM1; // Value injected by FXMLLoader
@@ -52,12 +54,20 @@ public class FXMLController {
 
     @FXML
     void doConnessioneMassima(ActionEvent event) {
-    	
+    	for(Arco a: this.model.getConnesioneMax()) {
+    		txtResult.appendText(a.toString()+"\n");
+    	}
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-    	
+    	txtResult.clear();
+    	if((txtMinuti != null) &&(cmbMese.getValue()!=null)) {
+    		Integer minuti=Integer.parseInt(txtMinuti.getText());
+    		Integer mese=cmbMese.getValue();
+    		this.model.creaGrafo(minuti, mese);
+    		txtResult.appendText(String.format("Grafo creato\n#VERTICI: %d\n#ARCHI: %d\n", this.model.numeroVertici(),this.model.numeroArchi()));
+    	}
     }
 
     @FXML
@@ -79,7 +89,7 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
-  
+    	cmbMese.getItems().addAll(this.model.getMesi());
     }
     
     
